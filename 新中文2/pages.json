@@ -25,7 +25,23 @@
                 "enablePullDownRefresh": false
             }
             
-        }
+        },{
+            "path" : "pages/public/addPaper",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "编辑试卷",
+                "enablePullDownRefresh": false
+            }
+            
+        },{
+			
+			"path" : "pages/public/addQuestion",
+			"style" :                                                                                    
+			{
+			    "navigationBarTitleText": "编辑试题",
+			    "enablePullDownRefresh": false
+			}
+		}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
