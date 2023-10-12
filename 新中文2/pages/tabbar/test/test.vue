@@ -4,37 +4,39 @@
 		   <image class="heads_retangle" src="/static/ret.png"></image>
 		   <text class="heads_text">阅读水平测试</text>
 		</view>
+		<u-subsection :list="list0" :current="current" @change="sectionChange"></u-subsection>
 		<view class="content">
 			<view class="text-area">
 				<text class="title">测试说明</text>
 			</view>
 		</view>
 		
-        <!--<u-tabs @change="tabsChange($event,'paperView')" :current="paperView" ref="tabs" :list="list1" :is-scroll="false"></u-tabs>-->
+		<view v-if="current==1">
+        <u-tabs @change="tabsChange($event,'paperView')" :current="paperView" :list="list1" :scrollable="false" lineWidth=50 itemStyle="padding-left: 15px; padding-right: 15px; height: 34px;"></u-tabs>
 		
-		<view class="u-flex u-flex-row" style="background-color: white;justify-content: flex-end;">
+		<view class="u-flex u-flex-row" style="background-color: white;align-items: flex-end;">
 			<view class="u-p-15">
 				<u-button type="success" size="mini" @click="jumpToAddPaper()">新增试卷</u-button>
 			</view>
 		</view>
 		
-		<!--<view v-for="(item,index) in paperList">
+		<view v-for="(item,index) in paperList">
 			<view v-if="item.state == 0" class="shadow-border card-view">
 				<view class="card-view-top">
-					<view><u-icon style="margin-right: 10rpx;" name="file-text-fill" color="#2979ff"></u-icon><text>{{item.paperName}}</text></view><view><u-button @click="changePaperState(item,1)" type="warning" size="mini">发布</u-button></view>
+					<view><u-icon class="topicon" name="file-text-fill" color="#2979ff"></u-icon><text class="toptext">{{item.paperName}}</text></view><view><u-button @click="changePaperState(item,1)" type="warning" size="mini" class="topbutton">发布</u-button></view>
 				</view>
-				<view class="u-border-bottom"></view>
 				<view class="card-view-bottom">
-					 <view><u-icon style="margin-right: 10rpx;" name="clock-fill" color="lightgray"></u-icon> <text class="u-tips-color">{{item.createTime}}</text> </view>
+					 <view><u-icon class="bottomicon" name="clock-fill" color="#bdbeae"></u-icon> <text class="bottomtext">{{item.createTime}}</text> </view>
                      <view>
-							<view class="mybtn-blue" @click="jumpToEditPaper(item)">编辑试卷</view>
+							<u-button class="mybtn-blue" color="#0000ff" size="mini" @click="jumpToEditPaper(item)">编辑试卷</u-button>
 					 </view>
-					 <view><u-button type="success" size="mini" @click="jumpToEditQuestion(item)">编辑试题</u-button></view>
+					 <view><u-button class="bottombutton" type="success" size="mini" @click="jumpToEditQuestion(item)">编辑试题</u-button></view>
 					
-				</view>
+			    </view>
 			</view>
+		</view>
 			
-			<view v-if="item.state == 1" class="shadow-border card-view">
+			<!--<view v-if="item.state == 1" class="shadow-border card-view">
 				<view class="card-view-top">
 					<view><u-icon style="margin-right: 10rpx;" name="file-text-fill" color="#2979ff"></u-icon><text>{{item.paperName}}</text></view><view><u-button @click="changePaperState(item,0)" type="error" size="mini">撤回</u-button></view>
 				</view>
@@ -57,7 +59,10 @@
 			</view>
 			
 		</view>-->
+		</view>
+		<view v-if="current==0">
 		<u-button class="buttontest" type="warning" shape="circle" @tap="jump">进入测试</u-button>
+		</view>
 		
 		
 	</view>
@@ -72,7 +77,12 @@
 				tabScrollTop: 0,
 				currentId: 1,
 				testList:[],
-				paperList:[],
+				paperList:[{
+					paperName: 'test',
+					createTime: '2023-10-12 13:31',
+					state: 0
+				}],
+				current:0,
 				list: [{
 						name: '等待考试'
 					}, {
@@ -117,11 +127,20 @@
 		    },
 			tabsChange(index,name) {
 				this[name] = index;
-				if(name=='testView'){
+				/*if(name=='testView'){
 					this.getTest(index);
 				}else{
 					this.getPaper(index);
-				}
+				}*/
+			},			
+			sectionChange(index){
+				this.current = index;
+				console.log(index);
+				/*if(index==0){
+					this.getTest(0);
+				}else{
+					this.getPaper(0);
+				}*/
 			},
 		}
 	}
@@ -186,7 +205,7 @@
 		align-items: center;
 		justify-content: center;
 		width: 100%;
-		height: 100upx;
+		height: 30vw;
 		font-size: 28upx;
 		color: $font-color-base;
 		position: relative;
@@ -249,7 +268,103 @@
 			height: 140upx;
 		}
 	}
-	.mybtn-blue{
-		font-size: 12px;border-radius:5px;padding:0 11px;background-color: #2979ff;height: 27px;width: auto;line-height: 27px;color:white;
+
+	
+	.u-p-15{
+		width: 10vw;
+		height: 7vw;
+		right: 3vw;
+		position: absolute;
 	}
+	
+	.shadow-border {
+	        width: 96%;
+	        /* padding: 0 3%; */
+	        height: 10vw;
+	        background-color: #fefefe;
+	        border-radius: 24upx;
+	        /*  阴影 */
+	        box-shadow: 0 0 20upx rgba(0, 0, 0, 0.15);
+	        margin: 40upx 2% 0upx 2%;
+	        display: flex;
+	        align-items: flex-start;
+	        justify-content: flex-start;
+	    }
+		
+	.card-view-top{
+		display: flex;
+		position: absolute;
+		margin-left: 3vw;
+		height: 5vw;
+		width: 90%;
+		align-items: flex-start;
+		justify-content: flex-start;
+	}
+	
+	.topicon{
+		display: flex;
+		position: absolute;
+		margin-left: 0;
+		margin-top: 2vw;
+		width: 5vw;
+	}
+	
+	.toptext{
+		display: flex;
+		position: absolute;
+		margin-left: 7vw;
+		margin-top: 2vw;
+		font-size: 10upx;
+	}
+	
+	.topbutton{
+		display: flex;
+		position: absolute;
+		margin-top: 2vw;
+		width: 7vw;
+		right: 0;
+	}
+	
+	.card-view-bottom{
+		display: flex;
+		position: absolute;
+		height: 3vw;
+		margin-top:6vw;
+		margin-left: 3vw;
+		width: 90%;
+		align-items: flex-start;
+		justify-content: flex-start;
+	}
+	
+	.buttomicon{
+		display: flex;
+		position: absolute;
+		margin-left: 0;
+		margin-top: 4vw;
+		width: 5vw;
+	}
+	
+	.bottomtext{
+		display: flex;
+		position: absolute;
+		margin-left: 7vw;
+		margin-top: -1.5vw;
+		font-size: 5upx;
+		color: gray;
+	}
+	
+	.mybtn-blue{
+		display: flex;
+		position: absolute;
+		width: 10vw;
+		right: 11vw;
+	}	
+	
+	.bottombutton{
+		display: flex;
+		position: absolute;
+		width: 10vw;
+		right: 0;
+	}	
+	
 </style>
