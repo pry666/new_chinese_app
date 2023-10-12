@@ -6,7 +6,7 @@
 		</view>
 		<view class="readtext">
 			<view class="read_list">
-				<view class="read_list_cell" hover-class="read_list_hover" v-for="(item,index) in readlist" :key="item.title" @tap="openinfo" :data-newid="item.post_id">
+				<view class="read_list_cell" hover-class="read_list_hover" v-for="(item,index) in currentpagedata" :key="item.title" @tap="openinfo" :data-newid="item.post_id">
 					<view class="read_body">
 					    <!--<image class="read_image" :src="item.author_avatar"></image>-->
 						<image class="read_image" src="/static/logo.png"></image>
@@ -15,6 +15,14 @@
 				</view>
 			</view>
 		</view>
+		
+		<view class = "footer">
+			<button @tap="prevpage" :disabled="currentpage == 1">上一页</button>
+		    <button class="footbutton" v-for="page in createArray(totalpages)" :key="page" @click="changePage(page)" :class="{active: page == currentpage}">
+			     {{page}}
+		    </button>
+ 			<button @tap="nextpage" :disabled="currentpage == totalpages">下一页</button>
+		</view>
 	</view>
 </template>
 
@@ -22,7 +30,9 @@
 	export default {
 		data() {
 			return {
-				readlist:[]
+				readlist:[],
+				pagesize: 5,
+				currentpage: 1,
 			}
 		},
 		onLoad: function(){
@@ -38,7 +48,37 @@
 							complete: () => {}
 						});
 		},
+		computed:{
+			totalpages(){
+				return Math.ceil(this.readlist.length / this.pagesize);
+			},
+			currentpagedata(){
+				const start = (this.currentpage - 1) * this.pagesize;
+				const end = start + this.pagesize;
+				return this.readlist.slice(start,end);
+			}
+		},
 		methods: {
+			changePage(pagenumber){
+				this.currentpage = pagenumber;
+			},
+			prevpage(){
+				if(this.currentpage > 1){
+					this.currentpage--;
+				}
+			},
+			nextpage(){
+				if(this.currentpage < this.totalpages){
+					this.currentpage++;
+				}
+			},
+			createArray(n) {
+			    let arr = [];
+			    for(let i = 1; i <= n; i++) {
+			      arr.push(i);
+			    }
+			    return arr;
+			},
 			openinfo(e) {
 				var bookid = e.currentTarget.dataset.newid
 				uni.navigateTo({
@@ -52,12 +92,12 @@
 					},
 					complete: () => {}
 				});
-			}			
+			}
 		}
 	}
 </script>
 
-<style>
+<style scoped>
  .heads{
 		display: flex;
 		flex-direction: column;
@@ -113,4 +153,33 @@
 		font-size: 2em;
 	}
   
+    .active{
+		color: red;
+	}
+	
+	.footer{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 2vw;
+		position: sticky;
+		bottom: 50rpx;
+		height: 6vw;
+		background-color: #ffaaf8;
+		border-radius: 24upx;
+		/*  阴影 */
+		box-shadow: 0 0 20upx rgba(0, 0, 0, 0.15);
+		margin: 40upx 2% 0upx 2%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	
+	.footbutton{
+	  text-decoration: none;
+	  color: black;
+	  padding: 5px;
+	  border: 1px solid black;
+	  border-radius: 5px;
+	}
 </style>
