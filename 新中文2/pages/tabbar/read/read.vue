@@ -17,11 +17,19 @@
 		</view>
 		
 		<view class = "footer">
+			<button @tap="currentpage = 1" :disabled="currentpage == 1">首页</button>
 			<button @tap="prevpage" :disabled="currentpage == 1">上一页</button>
-		    <button class="footbutton" v-for="page in createArray(totalpages)" :key="page" @click="changePage(page)" :class="{active: page == currentpage}">
-			     {{page}}
+			<view v-if="Math.floor((currentpage-1)/pagemax)!=0">
+			<button @tap="prevlistpage" :disabled="Math.floor((currentpage-1)/pagemax)==0">...</button>
+		    </view>
+		    <button class="footbutton" v-if="(Math.floor((currentpage-1)/pagemax)*pagemax+page) <= totalpages" v-for="page in createArray(pagemax)" :key="page" @click="changePage(Math.floor((currentpage-1)/pagemax)*pagemax+page)" :class="{active: (Math.floor((currentpage-1)/pagemax)*pagemax+page) == currentpage}">
+				 {{(Math.floor((currentpage-1)/pagemax))*pagemax+page}}
 		    </button>
+			<view v-if="currentpage < Math.floor(((totalpages-1)/pagemax))*pagemax+1">
+			<button @tap="nextlistpage" :disabled="currentpage == totalpages">...</button>
+			</view>
  			<button @tap="nextpage" :disabled="currentpage == totalpages">下一页</button>
+			<button @tap="currentpage = totalpages" :disabled="currentpage == totalpages">末页</button>
 		</view>
 	</view>
 </template>
@@ -31,8 +39,9 @@
 		data() {
 			return {
 				readlist:[],
-				pagesize: 5,
+				pagesize: 3,
 				currentpage: 1,
+				pagemax : 5//底部最多显示多少
 			}
 		},
 		onLoad: function(){
@@ -62,10 +71,16 @@
 			changePage(pagenumber){
 				this.currentpage = pagenumber;
 			},
+			prevlistpage(){
+				this.currentpage = Math.floor((this.currentpage-1)/this.pagemax)*this.pagemax;
+			},
 			prevpage(){
 				if(this.currentpage > 1){
 					this.currentpage--;
 				}
+			},
+			nextlistpage(){
+				this.currentpage = (Math.floor((this.currentpage-1)/this.pagemax)+1)*this.pagemax+1;
 			},
 			nextpage(){
 				if(this.currentpage < this.totalpages){
@@ -154,7 +169,7 @@
 	}
   
     .active{
-		color: red;
+		background-color: red;
 	}
 	
 	.footer{
@@ -178,8 +193,6 @@
 	.footbutton{
 	  text-decoration: none;
 	  color: black;
-	  padding: 5px;
-	  border: 1px solid black;
 	  border-radius: 5px;
 	}
 </style>
