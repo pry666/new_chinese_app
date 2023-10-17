@@ -17,19 +17,19 @@
 		</view>
 		
 		<view class = "footer">
-			<button @tap="currentpage = 1" :disabled="currentpage == 1">首页</button>
-			<button @tap="prevpage" :disabled="currentpage == 1">上一页</button>
+			<button @tap="currentpage = 1" :disabled="currentpage == 1" style="height: 5vw;font-size: 1upx;">首页</button>
+			<button @tap="prevpage" :disabled="currentpage == 1" style="height: 5vw;font-size: 1upx;">上一页</button>
 			<view v-if="Math.floor((currentpage-1)/pagemax)!=0">
-			<button @tap="prevlistpage" :disabled="Math.floor((currentpage-1)/pagemax)==0">...</button>
+			<button @tap="prevlistpage" :disabled="Math.floor((currentpage-1)/pagemax)==0" style="height: 5vw;font-size: 1upx;">...</button>
 		    </view>
 		    <button class="footbutton" v-if="(Math.floor((currentpage-1)/pagemax)*pagemax+page) <= totalpages" v-for="page in createArray(pagemax)" :key="page" @click="changePage(Math.floor((currentpage-1)/pagemax)*pagemax+page)" :class="{active: (Math.floor((currentpage-1)/pagemax)*pagemax+page) == currentpage}">
 				 {{(Math.floor((currentpage-1)/pagemax))*pagemax+page}}
 		    </button>
 			<view v-if="currentpage < Math.floor(((totalpages-1)/pagemax))*pagemax+1">
-			<button @tap="nextlistpage" :disabled="currentpage == totalpages">...</button>
+			<button @tap="nextlistpage" :disabled="currentpage == totalpages" style="height: 5vw;font-size: 1upx;">...</button>
 			</view>
- 			<button @tap="nextpage" :disabled="currentpage == totalpages">下一页</button>
-			<button @tap="currentpage = totalpages" :disabled="currentpage == totalpages">末页</button>
+ 			<button @tap="nextpage" :disabled="currentpage == totalpages" style="height: 5vw;font-size: 1upx;">下一页</button>
+			<button @tap="currentpage = totalpages" :disabled="currentpage == totalpages" style="height: 5vw;font-size: 1upx;">末页</button>
 		</view>
 	</view>
 </template>
@@ -39,9 +39,9 @@
 		data() {
 			return {
 				readlist:[],
-				pagesize: 3,
+				pagesize: 4,
 				currentpage: 1,
-				pagemax : 5//底部最多显示多少
+				pagemax : 3//底部最多显示多少
 			}
 		},
 		onLoad: function(){
@@ -112,9 +112,10 @@
 	}
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import url('/font/font.css');
  .heads{
-		display: flex;
+		display: flex;	
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
@@ -132,7 +133,7 @@
 			left: 50%;
 			transform: translate(-50%, -50%);
 			font-family: btt;
-			font-size: 40px;
+			font-size: 20px;
 			color: #FFFFFF;
 			text-shadow: 0 2px 4px rgba(0,0,0,0.50);			
 		}
@@ -165,7 +166,7 @@
 		left: 22vw;
 		right: auto;
 		color: #000000;
-		font-size: 2em;
+		font-size: 15upx;
 	}
   
     .active{
@@ -176,10 +177,10 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		gap: 2vw;
+		gap: 1vw;
 		position: sticky;
 		bottom: 50rpx;
-		height: 6vw;
+		height: 10vw;
 		background-color: #ffaaf8;
 		border-radius: 24upx;
 		/*  阴影 */
@@ -194,5 +195,8 @@
 	  text-decoration: none;
 	  color: black;
 	  border-radius: 5px;
+	  height: 5vw;
+	  width: 1rpx;
+	  font-size: 1upx;
 	}
 </style>
