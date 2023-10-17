@@ -5,11 +5,7 @@
 		   <text class="heads_text">阅读水平测试</text>
 		</view>
 		<u-subsection :list="list0" :current="current" @change="sectionChange"></u-subsection>
-		<view class="content">
-			<view class="text-area">
-				<text class="title">测试说明</text>
-			</view>
-		</view>
+
 		
 		<view v-if="current==1">
         <u-tabs @change="tabsChange($event,'paperView')" :current="paperView" :list="list1" :scrollable="false" lineWidth=50 itemStyle="padding-left: 15px; padding-right: 15px; height: 34px;"></u-tabs>
@@ -61,6 +57,11 @@
 		</view>-->
 		</view>
 		<view v-if="current==0">
+			<view class="content">
+				<view class="text-area">
+					<text class="title">测试说明</text>
+				</view>
+			</view>
 		<u-button class="buttontest" type="warning" shape="circle" @tap="jump">进入测试</u-button>
 		</view>
 		
@@ -80,6 +81,11 @@
 				paperList:[{
 					paperName: 'test',
 					createTime: '2023-10-12 13:31',
+					state: 0
+				},
+				{
+					paperName: 'test2',
+					createTime: '2023-10-13 13:31',
 					state: 0
 				}],
 				current:0,
@@ -146,7 +152,8 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
+	@import url('/font/font.css');
 	.content {
 		display: flex;
 		flex-direction: column;
@@ -172,7 +179,7 @@
 			left: 50%;
 			transform: translate(-50%, -50%);
 			font-family: btt;
-			font-size: 40px;
+			font-size: 20px;
 			color: #FFFFFF;
 			text-shadow: 0 2px 4px rgba(0,0,0,0.50);			
 		}
@@ -200,58 +207,14 @@
 		height: 100%;
 		background-color: #fff;
 	}
-	.f-item {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 100%;
-		height: 30vw;
-		font-size: 28upx;
-		color: $font-color-base;
-		position: relative;
-		&.active{
-			color: $base-color;
-			background: #f8f8f8;
-			&:before{
-				content: '';
-				position: absolute;
-				left: 0;
-				top: 50%;
-				transform: translateY(-50%);
-				height: 36upx;
-				width: 8upx;
-				background-color: $base-color;
-				border-radius: 0 4px 4px 0;
-				opacity: .8;
-			}
-		}
-	}
-
+	
 	.right-aside{
 		flex: 1;
 		overflow: hidden;
 		padding-left: 20upx;
 	}
-	.s-item{
-		display: flex;
-		align-items: center;
-		height: 70upx;
-		padding-top: 8upx;
-		font-size: 28upx;
-		color: $font-color-dark;
-	}
-	.t-list{
-		display: flex;
-		flex-wrap: wrap;
-		width: 100%;
-		background: #fff;
-		padding-top: 12upx;
-		&:after{
-			content: '';
-			flex: 99;
-			height: 0;
-		}
-	}
+
+
 	.t-item{
 		flex-shrink: 0;
 		display: flex;
