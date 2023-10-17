@@ -81,6 +81,12 @@
 			})
 		},
 		methods: {
+			raf(a){
+				return setTimeout(a,1000/60);
+			},
+			caf(a){
+				return clearTimeout(a);
+			},
 			 updateSliderValue() {
 			    // 获取音频的当前播放进度，
 			    // 假设 `this.audio` 是一个 HTMLAudioElement 实例
@@ -93,10 +99,10 @@
 			    // 如果音频还在播放，继续更新进度条
 			    if (!this.audio.paused && !this.issliderchange) {
 			      // 在下一帧更新滑块值
-			      this.frameid = requestAnimationFrame(this.updateSliderValue);
+			      this.frameid = this.raf(this.updateSliderValue);
 			    }
 			  },
-			donext(index){
+			donext(index){  
 				if(index==0){
 					this.sel_choice[0].icon = "read_sl.png"
 					this.sel_choice[1].icon = "listen.png"
@@ -132,10 +138,12 @@
 			sliderdrag(e){
 				this.issliderchange = true;
 				if(this.frameid != null){
-					cancelAnimationFrame(this.frameid);
+					//cancelAnimationFrame(this.frameid);
+					this.caf(this.frameid);
 					this.frameid = null;
 				}
 				this.currentTime = e.mp.detail.value;
+				this.updateSliderValue()
 			},
 			changestate() {
 				//this.play()
@@ -155,6 +163,7 @@
 				this.issliderchange = true
 				this.audio.seek(e.detail.value)
 				this.issliderchange = false
+				this.updateSliderValue()
 				//this.currentTime = e.detail.value
 			}
 		},
@@ -170,7 +179,7 @@
 			  console.log(res.errMsg);
 			  console.log(res.errCode);
 			});*/
-			this.audio.obeyMuteSwitch = false
+			//this.audio.obeyMuteSwitch = false
 			//获取音频长度
 			this.audio.onCanplay(() => {
 				this.duration = this.audio.duration
@@ -252,7 +261,7 @@
 	        width: 96%;
 	        /* padding: 0 3%; */
 			bottom: 0;
-	        height: 6vw;
+	        height: 15vw;
 	        background-color: #ffaaf8;
 	        border-radius: 24upx;
 	        /*  阴影 */
@@ -275,23 +284,23 @@
 	
 	            .icon {
 					position: relative;
-	                width: 3vw;
-	                height: 3vw;
+	                width: 7vw;
+	                height: 7vw;
 	                margin: 0 1vw 0 1vw;
 	                image {
-	                    width: 3vw;
-	                    height: 3vw;
+	                    width: 7vw;
+	                    height: 7vw;
 	                    z-index: 9;
 	                }
 	            }
 	        }
 			
 	.listen_box {
-	        width: 46%;
+	        width: 76%;
 	        /* padding: 0 3%; */
 			position: sticky;
 			top: 0;
-	        height: 6vw;
+	        height: 10vw;
 	        background-color: #ffffff;
 	        border-radius: 24upx;
 	        /*  阴影 */
@@ -329,7 +338,7 @@
 				.audio_slider{
 					position: relative;
 					align-items: center;
-					width: 20vw;
+					width: 26vw;
 				}	
 					
 				.audio_right{
