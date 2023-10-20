@@ -1,36 +1,26 @@
 <template>
 	<view class="examdetail">
 		<view class="u-m-r-30" style="display: flex;justify-content: center;">
-			<view class=" u-p-10" type="default"><view><u-button type="success" size="medium" @click="examsubmit">提交</u-button></view></view>
+			<view class=" u-p-10" style="display: flex;justify-content: center;gap: 10vw;">
+					<u-button type="success" size="medium" @tap="examsubmit">提交</u-button>
+					<view v-if="pid!=1"><u-button type="warning" size="medium" style="width: 10vw;font-size: 36upx;" @tap="back">返回</u-button></view>
+			</view>
 		</view>
 		<view class="examtypes">
 			<swiper class="examtypes-swiper" :current="currentindexpage" @change="change">
 				<template v-for="(itemcard,indexcard) in examdata.examlist">
-					<swiper-item v-if="itemcard.type == 0">
+					<swiper-item>
 						<view class="swiper-item">
 								<view class="exam-type">
-									{{indexcard+1}}.{{itemcard.realType == 2 ? '判断':'单选'}}题（{{itemcard.score}}分）
+									{{indexcard+1}}.{{itemcard.realType == 1 ? '判断':'单选'}}题（20分）
 								</view>
 								<view class="exam-content">
 									{{itemcard.examcontent}}
 								</view>
 								<view class="exam-optionlist">
-									<!-- 考试解析选择 -->
-									<view v-show="analysis" :class="{ examactive: analysislist[indexcard].answer == index }" v-for="(city, index) in itemcard.optionlist"
-									 class="exam-option_item">
-										<view class="exam-option_item_option">
-											{{index == 0?'A':''}}
-											{{index == 1?'B':''}}
-											{{index == 2?'C':''}}
-											{{index == 3?'D':''}}
-										</view>
-										<view class="exam-option_item_text">
-											{{city.name}}
-										</view>
-									</view>
 									<!-- 正常考试 -->
-									<view v-show="!analysis" @click="changChecked(index,itemcard.type)" :class="{ examactive: city.checked }"
-									 v-for="(city, index) in itemcard.optionlist" class="exam-option_item">
+									<view @tap="changChecked(index,itemcard.type)" :class="{ examactive: optionsel.checked }"
+									 v-for="(optionsel, index) in itemcard.optionlist" class="exam-option_item">
 										<view class="exam-option_item_option">
 											{{index == 0?'A':''}}
 											{{index == 1?'B':''}}
@@ -38,83 +28,13 @@
 											{{index == 3?'D':''}}
 										</view>
 										<view class="exam-option_item_text">
-											{{city.name}}
-										</view>
-									</view>
-								</view>
-								<!-- 考试解析 -->
-								<view v-if="analysis" class="examdetail-analysis">
-									<view class="examdetail-analysis_title" :class="{exammistake:analysislist[indexcard].judge == false}">
-										回答{{analysislist[indexcard].judge ? '正确' : '错误'}}，得分{{analysislist[indexcard].score}}
-									</view>
-									<view class="examdetail-analysis_content">
-										<view class="examdetail-analysis_content_op">
-											<text class="title">参考答案：</text><text class="text answer">{{analysislist[indexcard].solution}}</text>
-										</view>
-										<view class="examdetail-analysis_content_op">
-											<text class="title">本题解析：</text><text class="text">讲座概要、专题内容、拓展阅读文献、教学课件和教学视频等组成的教学内容体系。学生可以根据自己的学习兴趣，由浅入深地进行拓展学习。通过学术讲座、学术沙龙、学术讨论等展学习。通过学术讲座、学术沙龙、学术讨论等形式，使学生掌握较扎实的课程与教学的基础理论知识和其他相本课程对每个专题的讲座内容进行系统整理，形成了由讲座概要、专题内容、拓展阅读文献、教学课件和教学视频等组成的教学内容体系。学生可以根据自己的学习兴趣，由浅入深地进行拓展学习。通过学术讲座、学术沙龙、学术讨论等形式，使学生掌握较扎实的课程与教学的基础理论知识和其他相</text>
+											 {{optionsel.name}}
 										</view>
 									</view>
 								</view>
 						</view>
 					</swiper-item>
-					<swiper-item v-if="itemcard.type == 1">
-						<view class="swiper-item">
-								<view class="exam-type">
-									{{indexcard+1}}.多选题（{{itemcard.score}}分）
-								</view>
-								<view class="exam-content">
-									{{itemcard.examcontent}}
-								</view>
-								<view class="exam-optionlist">
-									<!-- 考试解析选择 -->
-									<view v-show="analysis" :class="{ examactive: analysislist[indexcard].answer[index] == index }" v-for="(city, index) in itemcard.optionlist"
-									 class="exam-option_item">
-										<view class="exam-option_item_option">
-											{{index == 0?'A':''}}
-											{{index == 1?'B':''}}
-											{{index == 2?'C':''}}
-											{{index == 3?'D':''}}
-										</view>
-										<view class="exam-option_item_text">
-											{{city.name}}
-										</view>
-									</view>
-									<!-- 正常考试 -->
-									<view v-show="!analysis" @click="changChecked(index,itemcard.type)" :class="{ examactive: city.checked }"
-									 v-for="(city, index) in itemcard.optionlist" class="exam-option_item">
-										<view class="exam-option_item_option">
-											{{index == 0?'A':''}}
-											{{index == 1?'B':''}}
-											{{index == 2?'C':''}}
-											{{index == 3?'D':''}}
-										</view>
-										<view class="exam-option_item_text">
-											{{city.name}}
-										</view>
-									</view>
-								</view>
-								<!-- 考试解析 -->
-								<view v-if="analysis" class="examdetail-analysis">
-									<view class="examdetail-analysis_title" :class="{exammistake:analysislist[indexcard].judge == false}">
-										回答{{analysislist[indexcard].judge ? '正确' : '错误'}}，得分{{analysislist[indexcard].score}}
-									</view>
-									<view class="examdetail-analysis_content">
-										<view class="examdetail-analysis_content_op">
-											<text class="title">参考答案：</text><text class="text answer">
-												<template v-for="items in analysislist[indexcard].solution">
-													{{items}}、
-												</template>
-											</text>
-										</view>
-										<view class="examdetail-analysis_content_op">
-											<text class="title">本题解析：</text><text class="text">本课程对每个专题的讲座内容进行系统整理，形成了由讲座概要、专题内容、拓展阅读文献、教学课件和教学视频等组成的教学内容体系。学生可以根据自己的学习兴趣，由浅入深地进行拓展学习。通过学术讲座、学术沙龙、学术讨论等形式，使学生掌握较扎实的课程与教学的基础理论知识和其他相</text>
-										</view>
-									</view>
-								</view>
-						</view>
-					</swiper-item>
-					
+
 				</template>
 			</swiper>
 
@@ -127,37 +47,27 @@
 					:colonColor="endtimeconfig.colonColor" :hours="false" :returnTime="true"></tui-countdown>
 			</view> -->
 			<view class="exam-coundown_page">
-				<view @click="pageswitch(0)" class="exam-page_btn">
+				<u-button @tap="pageswitch(0)" class="exam-page_btn">
 					上一题
-				</view>
-				<view v-if="!analysis" class="exam-page_length" @click="card_off">
+				</u-button>
+				<view class="exam-page_length" @tap="card_off">
 					题卡（{{currentindexpage + 1}}/{{examdata.examlist.length}}）
 				</view>
-				<view v-else class="exam-page_length" @click="card_off">
-					题卡（{{currentindexpage + 1}}/{{analysislist.length}}）
-				</view>
-				<view @click="pageswitch(1)" class="exam-page_btn">
+				<u-button @tap="pageswitch(1)" class="exam-page_btn">
 					下一题
-				</view>
+				</u-button>
 			</view>
 		</view>
 		<!-- 题卡 -->
-		<view backgroundColor="#24222200" mode="bottom" :visible="examvisible" @close="card_off">
+		<view backgroundColor="#24222200" mode="bottom" :visible="examvisible" @tap="card_off">
 			<view class="exam-card">
 				<view class="exam-card_title">
 					题卡
 				</view>
 				<!-- 正常考试 -->
-				<view v-if="!analysis" class="exam-card_list">
-					<view @click="selectexam(index)" class="exam-card_item" v-for="(item,index) in examdata.examlist"
+				<view class="exam-card_list">
+					<view @tap="selectexam(index)" class="exam-card_item" v-for="(item,index) in examdata.examlist"
 						:class="{'exam-card_blue':answerlist[index],'exam-card_bluecur':answerlist[index] && index == currentindex,'exam-card_graycur':answerlist[index] == undefined && index == currentindex}">
-						{{index + 1 }}
-					</view>
-				</view>
-				<!-- 答题解析 -->
-				<view v-else class="exam-card_list">
-					<view @click="selectexam(index)" class="exam-card_item" v-for="(aitem,index) in analysislist"
-						:class="{'exam-card_blue':aitem.type, 'exam-card_bluecur':aitem.type && index == currentindex, 'exam-card_red':!aitem.type, 'exam-card_redcur':!aitem.type && index == currentindex}">
 						{{index + 1 }}
 					</view>
 				</view>
@@ -167,59 +77,13 @@
 </template>
 
 <script>
-	//import appRequest from "@/common/appRequestUrl.js";
+	import appRequest from "@/common/appurl.js";
+    import { onLoad } from "../../uni_modules/uview-ui/libs/mixin/mixin";
 	export default {
 		data() {
 			return {
 				examvisible: false, // 答题卡显示隐藏
 				analysis: '', // 是否是答题解析
-				analysislist: [{
-						"index": 0,
-						"answer": 0,
-						"solution": "B",
-						"score": 0,
-						"type": 0,
-						"judge": false
-					},
-					{
-						"index": 1,
-						"answer": [0, 1],
-						"solution": ["A", "B"],
-						"score": 2,
-						"type": 1,
-						"judge": true
-					},
-					{
-						"index": 2,
-						"answer": 0,
-						"solution": "A",
-						"score": 2,
-						"type": 0,
-						"judge": true
-					},
-					{
-						"index": 3,
-						"answer": [0, 1],
-						"solution": ["C", "D"],
-						"score": 0,
-						"type": 1,
-						"judge": false
-					},
-					{
-						"index": 4,
-						"answer": "使学生掌握较扎实的课程与教学的基础理论知识和其他相。",
-						"solution": "讲座概要、专题内容、拓展阅读文献、通过学术讲座、学术沙龙、学术讨论等形式，使学生掌握较扎实的课程与教学的基础理论知识和其他相。",
-						"score": 0,
-						"type": 2,
-					},
-					{
-						"index": 5,
-						"answer": "使学生掌握较扎实的课程与教学的基础理论知识和其他相。",
-						"solution": "讲座概要、专题内容、拓展阅读文献、通过学术讲座、学术沙龙、学术讨论等形式，使学生掌握较扎实的课程与教学的基础理论知识和其他相。",
-						"score": 0,
-						"type": 2
-					}
-				], // 答题解析答案
 				headline: {
 					headline: '2010新人入职培训结业考试',
 					gobackurl: '', // 返回页面
@@ -234,38 +98,28 @@
 				questionList:[],
 				examdata: {
 					"examtype": "0", // 考试类型
-					"examlength": 6, // 考试题数
-					"examtime": 40, // 考试时间
-					"creditnum": 2, // 学分
-					"anewnum": 1, // 重考次数
-					"examtitle": "新人入职培训结业考试", // 考试标题
+					"examlength": 5, // 考试题数
+					"examtitle": "模拟测试", // 考试标题
 					"examlist":[]
 				}, // 考试数据
 				tid:"",
-				pid:"",
+				pid: "",
 				paperData:"",
 				testData:"",
 				score:0
 			};
 		},
-		onLoad(detail) {
+		onLoad: function(e){
+			this.pid = e.pid;
+		}
+		,
+		mounted(detail) {
 			
 			this.analysis = false;
-			this.tid = detail.tid;
-			this.pid = detail.pid;
-			this.getPaperData();
+			//this.pid = detail.pid;
+			//this.pid = 1;
+			this.getQuestionList();
 			// 取消
-			uni.$on("btncancel", res => {
-				if (res == 0) {
-					// 取消
-					this.submitconfig.submitmodal = false
-				} else {
-					// 提前交卷
-					this.submitconfig.submitmodal = false
-					this.submitanswer()
-					this.gotoexamresult()
-				}
-			})
 			// 确认
 			uni.$on("btnaffirm", res => {
 				if (res == 0) {
@@ -310,81 +164,129 @@
 		methods: {
 			getQuestionList(){
 				let _this = this;
-				appRequest.request({
-					method: "POST",
-					url: appRequest.urlMap.queryListForExam,
-					data: {
-						pid: _this.pid,
-						validFlag: 1
+				uni.request({
+					method: "GET",
+					url: appRequest.urlMap.queryListForExam + "?pid=" + _this.pid,
+					data:{
 					},
-					success: function(res) {
-						if (res.data.code == 200) {
-							_this.questionList = res.data.data;
+					success: function(res) {		
+						    console.log(res);
+						    //var getdata= JSON.stringify(res.data);
+					if (res.statusCode == 200) {
+							_this.questionList = res.data[0].question;
 							var list = _this.formatQuestion();
 							
 							_this.examdata = {
 								"examtype": "0", // 考试类型
 								"examlength": _this.questionList.length, // 考试题数
-								"examtime": 40, // 考试时间
-								"creditnum": 2, // 学分
-								"anewnum": 1, // 重考次数
-								"examtitle": _this.paperData.paperName, // 考试标题
 								"examlist":list
 							}; // 考试数据
 							
-							console.log(JSON.stringify(_this.examdata));
-							
-						} else {
-							_this.$api.msg('试卷获取失败');
+							//console.log(JSON.stringify(_this.examdata));
+						}else{
+							console.log("获取失败");
 						}
 					},
 					fail: function(res) {
-						_this.$api.msg("请求异常");
+						console.log("请求异常");
 					}
 				})
 				
 			},
-			getPaperData(){
-				let _this = this;
-				appRequest.request({
-					method: "POST",
-					url: appRequest.urlMap.findExamPaper,
-					data: {
-						pid: _this.pid,
-						validFlag: 1
-					},
-					success: function(res) {
-						if (res.data.code == 200) {
-							_this.paperData = res.data.data;
-							_this.getQuestionList();
-						} else {
-							_this.$api.msg('试卷获取失败');
-						}
-					},
-					fail: function(res) {
-						_this.$api.msg("请求异常");
+			// 提交按钮点击弹出选择框
+			examsubmit() {
+				console.log("提交")
+				// console.log(this.examdata.examlength);
+				//console.log(this.answerlist);
+				let currlist = []
+				this.answerlist.forEach((item, index) => {
+					if (item) {
+						currlist.push(item)
 					}
 				})
+				this.currlist = currlist;
+				//console.log(currlist);
+				//console.log(this.examdata.examlength, this.currlist.length);
+				if (this.examdata.examlength == this.currlist.length) {
+					var hisList = [];
+					this.score = 0
+					for(let i = 0;i<this.questionList.length;i++){
+						var obj = this.questionList[i];
+						var usrRes = "";
+						usrRes = this.getResByNum(this.currlist[i].answer);
+						if(usrRes == obj.rightAns){
+							this.score += 20;
+						}
+						hisList.push({userAns:usrRes,rightAns:obj.rightAns,tid:this.tid,pid:this.pid,res:usrRes == obj.rightAns?1:0,qid:obj.qid});
+					}
+					//this.editExamTest(this.score,this.tid);
+					if(this.pid == 1){
+						this.cot(this.score);
+						console.log(this.score);						
+					}
+                    else if(this.score == 100){
+						uni.showModal({
+							content:"恭喜你全对!",
+							showCancel:false,
+							success(res) {
+	                          uni.switchTab({
+								  url:'/pages/tabbar/read/read'
+							  })
+							}
+						})													
+					}
+					else{
+						uni.showModal({
+							content:"你的答案有错，点击确认查看结果反馈并请重新阅读",
+							showCancel:false,
+							success(res) {
+							  var content = ""
+							  for(var i = 0;i<hisList.length;i++){
+								  content+='\r\n'+(i+1)+". "+hisList[i].userAns
+								  if(hisList[i].userAns == hisList[i].rightAns){
+									  content+='  正确';
+								  }else{
+									  content+='  错误';
+								  }
+							  }
+	                          uni.showModal({
+								  title: "结果反馈",
+								  content:"你的答案："+ content
+							  })
+							}
+						})						
+					}
+				} else if (this.examdata.examlength > this.currlist.length) {
+					let undone = this.examdata.examlength - this.currlist.length;
+					uni.showModal({
+						content:"还有"+undone+"道题未完成",
+						success(res) {
+							if(res.confirm){
+							}
+						}
+					})
+					
+				}
 			},
 			formatQuestion(){
 				var resList = [];
 				var _this = this;
-				var scoreName = ['singleScore','multiScore','judgeScore']
+				//var scoreName = ['singleScore','multiScore','judgeScore']
 				for(var i=0;i<this.questionList.length;i++){
+					//this.anllist.push("1");
 					var obj = this.questionList[i];
 					var optionlist = [];
 					optionlist.push({name:obj.ansA,checked: false});
 					optionlist.push({name:obj.ansB,checked: false});
-					if(obj.type<2){
+					if(obj.type==0){
 						optionlist.push({name:obj.ansC,checked: false});
 						optionlist.push({name:obj.ansD,checked: false});
 					}
 					
 					var res = {
-						id:obj.uid,
+						id:obj.qid,
 						type:obj.type==1?1:0,
 						realType:obj.type,
-						score:_this.paperData[scoreName[obj.type]],
 						examcontent:obj.context,
 						optionlist:optionlist
 					}
@@ -393,55 +295,6 @@
 				
 				return resList;
 				
-			},
-			// 提交按钮点击弹出选择框
-			examsubmit() {
-				console.log("提交")
-				// console.log(this.examdata.examlength);
-				// console.log(this.answerlist);
-				let currlist = []
-				this.answerlist.forEach((item, index) => {
-					if (item) {
-						currlist.push(item)
-					}
-				})
-				this.currlist = currlist;
-				// console.log(currlist);
-				// console.log(this.examdata.examlength, this.currlist.length);
-				if (this.examdata.examlength == this.currlist.length) {
-					var hisList = [];
-					this.score = 0
-					for(let i = 0;i<this.questionList.length;i++){
-						var obj = this.questionList[i];
-						var usrRes = "";
-						if(obj.type == 1){
-							for(var j = 0;j<this.currlist[i].answer.length;j++){
-								usrRes +=this.getResByNum(this.currlist[i].answer[j]);
-							}
-						}else{
-							usrRes =this.getResByNum(this.currlist[i].answer);
-						}
-						var scoreNameList = ['single','multi','judge'];
-						if(usrRes == obj.rightAns){
-							this.score += this.paperData[scoreNameList[obj.type]+'Score'];
-						}
-						
-						hisList.push({userAns:usrRes,rightAns:obj.rightAns,tid:this.tid,pid:this.pid,res:usrRes == obj.rightAns?1:0,qid:obj.qid});
-					}
-					this.editExamTest(this.score,hisList);
-				
-				} else if (this.examdata.examlength > this.currlist.length) {
-					let undone = this.examdata.examlength - this.currlist.length
-					uni.showModal({
-						content:"还有"+undone+"道题未完成",
-						success(res) {
-							if(res.confirm){
-								
-							}
-						}
-					})
-					
-				}
 			},
 			getResByNum(num){
 				let usrRes = ""
@@ -471,40 +324,49 @@
 				console.log(current)
 				this.currentindex = current
 				this.currentindexpage = current
-			},
-			editExamTest(score,hisList){
-				let _this = this;
-				appRequest.request({
-					method: "POST",
-					url: appRequest.urlMap.editExamTest,
-					data: {
-						tid:_this.tid,
-						score:score,
-						state:score < _this.paperData.passScore ? 2:1
-					},
-					success: function(res) {
-						if (res.data.code == 200) {
-							_this.addExamHisList(hisList)
-						} else {
-							_this.$api.msg('提交失败');
+			},			
+			cot(score){
+				uni.showModal({
+					content:"提交成功，你获得了"+score+"分",
+					showCancel:false,
+					success(res) {
+						if(res.confirm){
+							uni.request({
+								url: appRequest.urlMap.updateuser,
+								method:"POST",
+								data:{
+									uid : 1,
+									score: score
+								},
+								success(res) {
+									console.log("成功");
+									uni.switchTab({
+										url: '/pages/tabbar/mine/mine'
+									})
+								},
+								fail: () => {},
+								complete: () => {}
+								
+							})
+
 						}
-					},
-					fail: function(res) {
-						_this.$api.msg("请求异常");
 					}
 				})
 			},
-			addExamHisList(hisList){
+			addExamHisList(newscore,tid){
 				let _this = this;
-				appRequest.request({
+				uni.request({
 					method: "POST",
-					url: appRequest.urlMap.addExamHisList,
-					data: hisList,
+					url: appRequest.urlMap.updateuser,
+					data:{
+						score : newscore,
+						uid : tid
+					},
 					success: function(res) {
-						if (res.data.code == 200) {
+						if (res.data.statusCode == 200) {
 							
 							uni.showModal({
-								content:"提交成功，你获得了"+_this.score+"分，成绩"+(_this.score > _this.paperData.passScore ? '合格':'不合格'),
+								content:"提交成功，你获得了"+_this.score+"分，成绩",
 								showCancel:false,
 								success(res) {
 									if(res.confirm){
@@ -517,54 +379,33 @@
 							
 							
 						} else {
-							_this.$api.msg('提交失败');
+							console.log('提交失败');
 						}
 					},
 					fail: function(res) {
-						_this.$api.msg("请求异常");
+						console.log("请求异常");
 					}
 				})
 			},
 			// 单选
 			changChecked(index, type) {
 				// console.log(index, type);
-				// console.log(this.currentindex);
-				if (type == 0) {
-					if (this.examdata.examlist[this.currentindex].optionlist[index].checked) {
-						this.examdata.examlist[this.currentindex].optionlist[index].checked = false;
-						this.answerlist[this.currentindexpage] = undefined
-						return
-					}
-					this.examdata.examlist[this.currentindex].optionlist.forEach((item, index) => {
-						item.checked = false;
-					})
-					this.examdata.examlist[this.currentindex].optionlist[index].checked = !this.examdata.examlist[this
-						.currentindex].optionlist[index].checked;
-					this.answerlist[this.currentindexpage] = ({
-						"index": this.currentindexpage,
-						"answer": index
-					})
-				} else if (type == 1) {
-					this.examdata.examlist[this.currentindex].optionlist[index].checked = !this.examdata.examlist[this
-						.currentindex].optionlist[index].checked
-					let indexarr = []
-					this.examdata.examlist[this.currentindex].optionlist.forEach((item, index) => {
-						if (item.checked) {
-							indexarr.push(index)
-						}
-					})
-					// console.log(indexarr);
-					if (indexarr.length == 0) {
-						this.answerlist[this.currentindexpage] = undefined
-					} else {
-						this.answerlist[this.currentindexpage] = ({
-							"index": this.currentindexpage,
-							"answer": indexarr
-						})
-					}
-
+				console.log(this.currentindex);
+				if (this.examdata.examlist[this.currentindex].optionlist[index].checked) {
+					this.examdata.examlist[this.currentindex].optionlist[index].checked = false;
+					this.answerlist[this.currentindexpage] = undefined
+					return
 				}
-				// console.log(this.answerlist);
+				this.examdata.examlist[this.currentindex].optionlist.forEach((item, index) => {
+					item.checked = false;
+				})
+				this.examdata.examlist[this.currentindex].optionlist[index].checked = !this.examdata.examlist[this
+					.currentindex].optionlist[index].checked;
+				this.answerlist[this.currentindexpage] = ({
+					"index": this.currentindexpage,
+					"answer": index
+				})
+				console.log(this.answerlist);
 			},
 			// textarea输入
 			valuecontent() {
@@ -582,7 +423,7 @@
 			pageswitch(index) {
 				// console.log(this.currentindexpage);
 				if (index) {
-					let curlength = this.analysis ? this.analysislist.length : this.examdata.examlength
+					let curlength = this.examdata.examlength
 					if (this.currentindexpage < curlength - 1) {
 						this.currentindexpage = this.currentindexpage + 1
 					}
@@ -592,30 +433,6 @@
 					}
 				}
 			},
-			// 倒计时结束
-			endtime() {
-				console.log("结束");
-				this.coundown_end = true
-				this.endtimeconfig.color = "#FF4545"
-				this.endtimeconfig.colonColor = "#FF4545"
-				// 提交答案
-				this.submitanswer()
-				// 通知用户
-				this.submitconfig = {
-					"submitmodal": true,
-					"title": "温馨提示",
-					"content": "考试时间到，系统已自动交卷",
-					"backgroundColor": "#ffffff",
-					"radius": "10rpx",
-					"submitbtngot": "我知道了",
-					"type": 2
-				}
-			},
-			// 倒计时剩余时间
-			time(time) {
-				// console.log(time.seconds)
-				this.residuetime = this.examdata.examtime - time.seconds
-			},
 			// 提交试卷答案
 			submitanswer() {
 				console.log("提交试卷答案")
@@ -624,20 +441,23 @@
 			// 跳转到考试结果
 			gotoexamresult() {
 				let result = {
-					"title": this.examdata.examtitle,
+					//"title": this.examdata.examtitle,
 					"submittime": new Date().getTime(),
 					"resultnum": 90,
 					"subjective": 3,
 					"objective": 3,
-					"residuetime": this.residuetime,
+					//"residuetime": this.residuetime,
 					"accuracy": 90,
 					"jige": 60,
 					"msg": "待测评"
 				};
 				result = JSON.stringify(result)
-				uni.redirectTo({
+				/*uni.redirectTo({
 					url: `/pages/examresult/examresult?result=${result}`
-				});
+				});*/
+				uni.switchTab({
+					url:'/pages/tabbar/test/test'
+				})
 			},
 			// 关闭题卡
 			card_off() {
@@ -646,7 +466,10 @@
 			// 选题卡选题
 			selectexam(index) {
 				this.examvisible = false;
-				this.currentindexpage = index
+				this.currentindexpage = index;
+			},
+			back(){
+				uni.navigateBack({});
 			}
 		}
 	}
@@ -668,7 +491,7 @@
 			font-size: 28rpx;
 			font-family: PingFang SC;
 			font-weight: 500;
-			color: $mk-base-color;
+			color: #ff0000;
 			margin: 0;
 			padding: 0;
 			background-color: #FFFFFF;
@@ -753,12 +576,12 @@
 
 						.examactive {
 							background: #F6F6F6;
-							border: 2rpx solid $mk-base-color;
+							border: 2rpx solid #ff0000;
 
 							.exam-option_item_option {
-								background-color: $mk-base-color;
+								background-color: #ff0000;
 								color: #FFFFFF;
-								border: 2rpx solid $mk-base-color;
+								border: 2rpx solid #ff0000;
 							}
 						}
 					}
@@ -792,7 +615,7 @@
 							font-size: 20rpx;
 							font-family: PingFang SC;
 							font-weight: 500;
-							color: $mk-base-color;
+							color: #ff0000;
 							line-height: 44rpx;
 						}
 
@@ -829,7 +652,7 @@
 								}
 
 								.answer {
-									color: $mk-base-color;
+									color: #ff0c1c;
 								}
 
 							}
@@ -845,7 +668,7 @@
 
 		.exam-countdown {
 			position: fixed;
-			bottom: 0;
+			bottom: 35vw;
 			width: 100%;
 			display: flex;
 			flex-direction: column;
@@ -858,7 +681,7 @@
 				font-weight: 500;
 				font-weight: bold;
 				text-align: center;
-				color: $mk-base-color;
+				color: #ff0000;
 				margin: 22rpx 0;
 				display: flex;
 				justify-content: center;
@@ -894,7 +717,8 @@
 		.exam-card {
 			position: relative;
 			width: 100%;
-			height: 980rpx;
+			height: 50%;
+			bottom: 15vw;
 			background: #FFFFFF;
 			border-radius: 30rpx 30rpx 0px 0px;
 			display: flex;
@@ -908,7 +732,7 @@
 				font-family: PingFang SC;
 				font-weight: bold;
 				color: #202020;
-				padding: 43rpx 0;
+				//padding: 2rpx 0;
 			}
 
 			.exam-card_list {
@@ -932,15 +756,15 @@
 				}
 
 				.exam-card_blue {
-					background: rgba($color: $mk-base-color, $alpha: 0.15);
-					border: 2rpx solid rgba($color: $mk-base-color, $alpha: 0.15);
-					color: $mk-base-color;
+					background: rgba($color: #ff0000, $alpha: 0.15);
+					border: 2rpx solid rgba($color: #ff0000, $alpha: 0.15);
+					color: #ff0000;
 				}
 
 				.exam-card_bluecur {
-					background: rgba($color: $mk-base-color, $alpha: 0.35);
-					border: 2rpx solid rgba($color: $mk-base-color, $alpha: 0.35);
-					color: $mk-base-color;
+					background: rgba($color: #ff0000, $alpha: 0.35);
+					border: 2rpx solid rgba($color: #ff0000, $alpha: 0.35);
+					color: #ff0000;
 				}
 
 				.exam-card_graycur {
@@ -962,9 +786,9 @@
 
 			.exam-card_off {
 				position: absolute;
-				bottom: 0;
+				bottom: 30vw;
 				width: 100%;
-				height: 98rpx;
+				height: 100%;
 				background: #FFFFFF;
 				color: #202020;
 				font-size: 32rpx;
