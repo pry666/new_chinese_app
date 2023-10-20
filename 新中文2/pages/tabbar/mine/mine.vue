@@ -18,10 +18,12 @@
 </template>
 
 <script>
+	import apprequest from "@/common/appurl.js"
 	export default {
 		data() {
 			return {
 				userinfo:{},
+				level : 0,
 				orderTypeList:[
 					{
 						name: '已阅读',
@@ -38,16 +40,31 @@
 				],
 			}
 		},
-		onLoad(){
-			this.init();
-		},
+		onShow:	function(){		
+			//this.init();
+			uni.request({
+				url: apprequest.urlMap.getusr+"?uid=1",
+				method: 'GET',
+				data: {
+				},
+				success: res => {
+					this.userinfo={
+						face:'/static/mine/face.png',
+						username: res.data[0].username,
+					}
+					this.level = res.data[0].userscore/20
+				},
+				fail: () => {},
+				complete: () => {}
+			});
+		}
+		,
 		methods: {
 			init(){
 				this.userinfo={
 					face:'/static/mine/face.png',
 					username:"管理员"
-				},
-				this.level = 'A'
+				}
 			}
 		}
 	}
