@@ -6,7 +6,7 @@
 		</view>
 		<view class="readtext">
 			<view class="read_list">
-				<view class="read_list_cell" hover-class="read_list_hover" v-for="(item,index) in currentpagedata" :key="item.title" @tap="openinfo" :data-newid="item.post_id">
+				<view class="read_list_cell" hover-class="read_list_hover" v-for="(item,index) in currentpagedata" :key="item.title" @tap="openinfo" :data-newid="item.id">
 					<view class="read_body">
 					    <!--<image class="read_image" :src="item.author_avatar"></image>-->
 						<image class="read_image" src="/static/logo.png"></image>
@@ -35,27 +35,29 @@
 </template>
 
 <script>
+	import apprequest from "@/common/appurl.js"
 	export default {
 		data() {
 			return {
 				readlist:[],
-				pagesize: 4,
+				pagesize: 1,
 				currentpage: 1,
 				pagemax : 3//底部最多显示多少
 			}
 		},
-		onLoad: function(){
-						uni.request({
-							url: 'https://unidemo.dcloud.net.cn/api/news',
-							method: 'GET',
-							data: {},
-							success: res => {
-								console.log(res)
-								this.readlist = res.data
-							},
-							fail: () => {},
-							complete: () => {}
-						});
+		onShow: function(){
+			uni.request({
+				url: 'https://unidemo.dcloud.net.cn/api/news',
+				//url : apprequest.urlMap.readtext+'?level=5',
+				method: 'GET',
+				data: {},
+				success: res => {
+					console.log(res)
+					this.readlist = res.data
+				},
+				fail: () => {},
+				complete: () => {}
+			});
 		},
 		computed:{
 			totalpages(){
@@ -95,6 +97,7 @@
 			    return arr;
 			},
 			openinfo(e) {
+				//var bookid = e.currentTarget.dataset.newid
 				var bookid = e.currentTarget.dataset.newid
 				uni.navigateTo({
 					url: '/pages/info/info?bookid=' + bookid,
@@ -166,7 +169,7 @@
 		left: 22vw;
 		right: auto;
 		color: #000000;
-		font-size: 15upx;
+		font-size: 25upx;
 	}
   
     .active{
@@ -175,9 +178,7 @@
 	
 	.footer{
 		display: flex;
-		justify-content: center;
-		align-items: center;
-		gap: 1vw;
+		gap: 0.5vw;
 		position: sticky;
 		bottom: 50rpx;
 		height: 10vw;
@@ -185,18 +186,23 @@
 		border-radius: 24upx;
 		/*  阴影 */
 		box-shadow: 0 0 20upx rgba(0, 0, 0, 0.15);
-		margin: 40upx 2% 0upx 2%;
+		margin: 0 auto;
 		display: flex;
 		align-items: center;
-		justify-content: center;
+		justify-content: flex-start;
+		.footbutton{
+			display: flex;
+			justify-content: center;  // 让文字在水平方向居中
+			align-items: center;  // 让文字在垂直方向居中
+			text-align: center;
+			margin: 0 auto;
+			color: black;
+			border-radius: 5px;
+			height: 5vw;
+			width: 5vw;  // 宽度也设置为 5vw 让它成为一个方形按钮
+			font-size: 1vw; // 让字体大小更大一点
+		}
 	}
 	
-	.footbutton{
-	  text-decoration: none;
-	  color: black;
-	  border-radius: 5px;
-	  height: 5vw;
-	  width: 1rpx;
-	  font-size: 1upx;
-	}
+
 </style>
