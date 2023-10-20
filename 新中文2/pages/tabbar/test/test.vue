@@ -4,7 +4,7 @@
 		   <image class="heads_retangle" src="/static/ret.png"></image>
 		   <text class="heads_text">阅读水平测试</text>
 		</view>
-		<u-subsection :list="list0" :current="current" @change="sectionChange"></u-subsection>
+		<!--<u-subsection :list="list0" :current="current" @change="sectionChange"></u-subsection>
 
 		
 		<view v-if="current==1">
@@ -19,7 +19,14 @@
 		<view v-for="(item,index) in paperList">
 			<view v-if="item.state == 0" class="shadow-border card-view">
 				<view class="card-view-top">
-					<view><u-icon class="topicon" name="file-text-fill" color="#2979ff"></u-icon><text class="toptext">{{item.paperName}}</text></view><view><u-button @click="changePaperState(item,1)" type="warning" size="mini" class="topbutton">发布</u-button></view>
+					<view>
+						<u-icon class="topicon" name="file-text-fill" color="#2979ff"></u-icon>
+						<text class="toptext">{{item.paperName}}</text>
+					</view>
+					<view>
+						<u-button @click="changePaperState(item,1)" type="warning" size="mini" class="topbutton">发布</u-button>
+						<u-button class="del_button" color="#aa0000" size="mini" @click="deletePaper(item)">删除</u-button>
+					</view>
 				</view>
 				<view class="card-view-bottom">
 					 <view><u-icon class="bottomicon" name="clock-fill" color="#bdbeae"></u-icon> <text class="bottomtext">{{item.createTime}}</text> </view>
@@ -30,7 +37,7 @@
 					
 			    </view>
 			</view>
-		</view>
+		</view>-->
 			
 			<!--<view v-if="item.state == 1" class="shadow-border card-view">
 				<view class="card-view-top">
@@ -54,22 +61,21 @@
 				</view>
 			</view>
 			
-		</view>-->
 		</view>
-		<view v-if="current==0">
+		</view>-->
 			<view class="content">
 				<view class="text-area">
 					<text class="title">测试说明</text>
 				</view>
 			</view>
 		<u-button class="buttontest" type="warning" shape="circle" @tap="jump">进入测试</u-button>
-		</view>
 		
 		
 	</view>
 </template>
 
 <script>
+	import apprequest from "@/common/appurl.js"
 	export default {
 		data() {
 			return {
@@ -78,16 +84,7 @@
 				tabScrollTop: 0,
 				currentId: 1,
 				testList:[],
-				paperList:[{
-					paperName: 'test',
-					createTime: '2023-10-12 13:31',
-					state: 0
-				},
-				{
-					paperName: 'test2',
-					createTime: '2023-10-13 13:31',
-					state: 0
-				}],
+				paperList:[],
 				current:0,
 				list: [{
 						name: '等待考试'
@@ -118,12 +115,16 @@
 			}
 		},
 		onLoad() {
-
+			
+		},
+		onShow() {
+			this.paperView = 0;
+			this.getPaper(0);
 		},
 		methods: {
             jump: function(){
-				uni.switchTab({
-					url:'/pages/tabbar/read/read'
+				uni.navigateTo({
+					url:'/pages/public/examPage?pid=1'
 				})
 			},
 			jumpToAddPaper(){
@@ -147,7 +148,53 @@
 				}else{
 					this.getPaper(0);
 				}*/
+				if(index==1){
+					this.getPaper(0);
+				}
 			},
+			getPaper(state){
+				//console.log(apprequest.urlMap.getpaper)
+				uni.request({
+					url: apprequest.urlMap.getpaper,
+					method:"GET",				
+					//url: "http://106.75.250.96:9252/getpaperlist",
+					data:{},
+					success:(res)=>{
+						console.log("success");
+						this.paperList = res.data;
+					},
+					fail: ()=>{
+						console.log("error");
+					}
+				})
+			},
+			deletePaper(item){
+				uni.request({
+					url: apprequest.urlMap.delpaper,
+					method:"POST",				
+					//url: "http://106.75.250.96:9252/getpaperlist",
+					data:{
+						pid: item.pid
+						},
+					success:(res)=>{
+						console.log("success");
+						uni.showModal({
+							title:"成功",
+							content:"删除成功",
+							showCancel:false,
+							success:function(res){
+								if(res.confirm){
+									location.reload();
+								}
+							}
+						})
+						
+					},
+					fail: ()=>{
+						console.log("error");
+					}
+				})				
+			}
 		}
 	}
 </script>
