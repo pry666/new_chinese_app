@@ -32,6 +32,7 @@
 </template>
 
 <script>
+	import apprequest from "@/common/appurl.js"
 	//const audio = uni.createInnerAudioContext()
 	export default {
 		data() {
@@ -70,15 +71,27 @@
 		onLoad:
 		function(e){
 			console.log(e)
-			uni.request({
+			/*uni.request({
 				url:'https://unidemo.dcloud.net.cn/api/news/36kr/' + e.bookid,
 				success: res => {
 					this.title = res.data.title
-					this.strings = res.data.content
+					this.strings = res.data.text
 				},
 				fail: () => {},
 				complete: () => {}
-			})
+			})*/
+			uni.request({
+				//url: 'https://unidemo.dcloud.net.cn/api/news',
+				url : apprequest.urlMap.gettext+'?id='+e.bookid,
+				method: 'GET',
+				data: {},
+				success: res => {
+					this.title = res.data.title
+					this.strings = res.data.text
+				},
+				fail: () => {},
+				complete: () => {}
+			});
 		},
 		methods: {
 			raf(a){
@@ -122,7 +135,11 @@
 					this.sel_choice[1].icon = "listen.png"
 					this.sel_choice[2].icon = "test_sl.png"
 					this.showElement = false
+					this.ifplay = 'continue.png'
 					this.audio.pause()
+					uni.navigateTo({
+						url:'/pages/public/examPage?pid=2'
+					})
 				}
 			},
 			//格式化时长
