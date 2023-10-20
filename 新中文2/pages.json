@@ -1,55 +1,52 @@
 {
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		{
-			"path": "pages/tabbar/read/read",
-			"style": {
-				"navigationBarTitleText": ""
-			}
-		},{
-			"path": "pages/tabbar/test/test",
-			"style": {
-				"navigationBarTitleText": ""
-			}
-		},{
-			"path": "pages/tabbar/mine/mine",
-			"style": {
-				"navigationBarTitleText": ""
-			}
-		}
-		
-	    ,{
+    "pages" : [
+        //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+        {
+            "path" : "pages/tabbar/read/read",
+            "style" : {
+                "navigationBarTitleText" : ""
+            }
+        },
+        {
+            "path" : "pages/tabbar/test/test",
+            "style" : {
+                "navigationBarTitleText" : ""
+            }
+        },
+        {
+            "path" : "pages/tabbar/mine/mine",
+            "style" : {
+                "navigationBarTitleText" : ""
+            }
+        },
+        {
             "path" : "pages/info/info",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
+            "style" : {
+                "navigationBarTitleText" : "",
+                "enablePullDownRefresh" : false
             }
-            
-        },{
+        },
+        {
             "path" : "pages/public/addPaper",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "编辑试卷",
-                "enablePullDownRefresh": false
+            "style" : {
+                "navigationBarTitleText" : "编辑试卷",
+                "enablePullDownRefresh" : false
             }
-            
-        },{
-			
-			"path" : "pages/public/addQuestion",
-			"style" :                                                                                    
-			{
-			    "navigationBarTitleText": "编辑试题",
-			    "enablePullDownRefresh": false
-			}
-		},{
+        },
+        {
+            "path" : "pages/public/addQuestion",
+            "style" : {
+                "navigationBarTitleText" : "编辑试题",
+                "enablePullDownRefresh" : false
+            }
+        },
+        {
             "path" : "pages/public/paperList",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "试卷列表",
-                "enablePullDownRefresh": false
+            "style" : {
+                "navigationBarTitleText" : "试卷列表",
+                "enablePullDownRefresh" : false
             }
-            
-        }/*,{
+        }    ,{
             "path" : "pages/public/examPage",
             "style" :                                                                                    
             {
@@ -57,37 +54,50 @@
                 "enablePullDownRefresh": false
             }
             
-        }*/
+        }
     ],
-	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
-	},
-	
-	"tabBar": {
-		"color": "#000000",
-		"selectedColor": "#fd3f05",
-		"borderStyle": "black",
-		"backgroundColor": "#55ffff",
-		"list": [{
-			"pagePath": "pages/tabbar/read/read",
-			"iconPath": "static/tabbar/read.png",
-			"selectedIconPath": "static/tabbar/read_cl.png",
-			"text": "阅读"
-		}, {
-			"pagePath": "pages/tabbar/test/test",
-			"iconPath": "static/tabbar/test.png",
-			"selectedIconPath": "static/tabbar/test_cl.png",
-			"text": "测试"
-		}, {
-			"pagePath": "pages/tabbar/mine/mine",
-			"iconPath": "static/tabbar/mine.png",
-			"selectedIconPath": "static/tabbar/mine_cl.png",
-			"text": "我的"
-		}]
-	},
-	
-	"uniIdRouter": {}
+
+    "globalStyle" : {
+        "navigationBarTextStyle" : "black",
+        "navigationBarTitleText" : "uni-app",
+        "navigationBarBackgroundColor" : "#F8F8F8",
+        "backgroundColor" : "#F8F8F8"
+    },
+    "tabBar" : {
+        "color" : "#000000",
+        "selectedColor" : "#fd3f05",
+        "borderStyle" : "black",
+        "backgroundColor" : "#55ffff",
+        "list" : [
+            {
+                "pagePath" : "pages/tabbar/read/read",
+                "iconPath" : "static/tabbar/read.png",
+                "selectedIconPath" : "static/tabbar/read_cl.png",
+                "text" : "阅读"
+            },
+            {
+                "pagePath" : "pages/tabbar/test/test",
+                "iconPath" : "static/tabbar/test.png",
+                "selectedIconPath" : "static/tabbar/test_cl.png",
+                "text" : "测试"
+            },
+            {
+                "pagePath" : "pages/tabbar/mine/mine",
+                "iconPath" : "static/tabbar/mine.png",
+                "selectedIconPath" : "static/tabbar/mine_cl.png",
+                "text" : "我的"
+            }
+        ]
+    },
+    "uniIdRouter" : {},
+    "condition" : {
+        //模式配置，仅开发期间生效
+        "list" : [
+            {
+                "name" : "", //模式名称
+                "path" : "pages/tabbar/read/read", //启动页面，必选
+                "query" : "" //启动参数，在页面的onLoad函数里面得到
+            }
+        ]
+    }
 }
