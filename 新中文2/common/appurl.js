@@ -1,4 +1,4 @@
-const baseUrl = "http://106.75.250.96:9252";
+const baseUrl = "******";
 
 const urlMap = {
 	login: baseUrl + "/login",
