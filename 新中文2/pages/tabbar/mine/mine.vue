@@ -3,9 +3,13 @@
   <view class="header">
             <image class="face" :src="userinfo.face"></image>
             <view class="username">{{userinfo.username}}</view>
-			<text class="level">您的阅读水平等级为：{{level}}</text>
             <image class="setting" src="/static/mine/setting.png"></image>
     </view>
+	
+	<view class="levelbox">
+		  <text class="level">您的阅读水平等级为：{{level}}</text>
+	</view>
+	
 	<view class="box">
 		<view class="label" v-for="(row,index) in orderTypeList" :key="row.name">
 			<view class="icon">
@@ -52,7 +56,7 @@
 						face:'/static/mine/face.png',
 						username: res.data[0].username,
 					}
-					this.level = res.data[0].userscore/20
+					this.level = res.data[0].userscore/20 + 1
 				},
 				fail: () => {},
 				complete: () => {}
@@ -104,19 +108,11 @@
 		left: 80rpx;
 		font-family: btt;
 		width: 100%;
-		color: #fff;
-		font-size: 20upx;
+		color: #000000;
+		font-size: 40upx;
 	}
 
-    .level{
-		position: absolute;
-		left: 50%;
-		top: 50%;
-		font-family: btt;
-		width: 100%;
-		color: #aa0000;
-		font-size: 20upx;
-	}
+
 	.setting {
 		position:absolute;
 		right: 0;
@@ -125,6 +121,31 @@
 		object-fit: contain;
 	}
     
+	.levelbox {
+	        width: 96%;
+	        /* padding: 0 3%; */
+	        height: 22vw;
+	        background-color: #fefefe;
+	        border-radius: 24upx;
+	        /*  阴影 */
+	        box-shadow: 0 0 20upx rgba(0, 0, 0, 0.15);
+	        margin: 40upx 2% 0upx 2%;
+	        display: flex;
+	        align-items: center;
+	        justify-content: center;
+			.level{
+				position: absolute;
+				display: flex;
+				margin-left: 50%;
+				//left: 40vw;
+				//top: 50%;
+				font-family: btt;
+				width: 100%;
+				color: #aa0000;
+				font-size: 40upx;
+			}
+	    }
+	
 	.box {
 	        width: 96%;
 	        /* padding: 0 3%; */
