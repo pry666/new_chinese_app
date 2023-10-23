@@ -2,7 +2,7 @@
 	<view>
 		<view class="heads">
 		   <image class="heads_retangle" src="/static/ret.png"></image>
-		   <text class="heads_text">阅读文本推荐</text>
+		   <text class="heads_text">阅读文本推荐（{{level}}级）</text>
 		</view>
 		<view class="readtext">
 			<view class="read_list">
@@ -40,20 +40,32 @@
 		data() {
 			return {
 				readlist:[],
-				pagesize: 1,
+				pagesize: 4,
 				currentpage: 1,
-				pagemax : 3//底部最多显示多少
+				pagemax : 3,//底部最多显示多少
+				level : -1
 			}
 		},
-		onShow: function(){
-			uni.request({
-				url: 'https://unidemo.dcloud.net.cn/api/news',
-				//url : apprequest.urlMap.readtext+'?level=5',
+		onShow:async function(){
+			await uni.request({
+				url: apprequest.urlMap.getusr+"?uid=1",
 				method: 'GET',
-				data: {},
+				data: {
+				},
 				success: res => {
-					console.log(res)
-					this.readlist = res.data
+					this.level = res.data[0].userscore/20 + 1
+					uni.request({
+						//url: 'https://unidemo.dcloud.net.cn/api/news',
+						url : apprequest.urlMap.readtext+'?level='+this.level,
+						method: 'GET',
+						data: {},
+						success: res => {
+							console.log(res)
+							this.readlist = res.data
+						},
+						fail: () => {},
+						complete: () => {}
+					});
 				},
 				fail: () => {},
 				complete: () => {}
